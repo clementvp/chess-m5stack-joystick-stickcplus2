@@ -1,6 +1,7 @@
 #include "M5StickCPlus2.h"
 #include "Wire.h"
 #include "constants.h"
+#include "move_utils.h"
 #include "square_utils.h"
 #include <Arduino.h>
 #include <mcu-max.h>
@@ -50,21 +51,6 @@ int toRow = 0;
 int toCol = 0;
 
 mcumax_move move;
-
-void print_move(mcumax_move move) {
-  String fromStr = String((char)('a' + ((move.from & 0x07) >> 0))) +
-                   String((char)('1' + 7 - ((move.from & 0x70) >> 4)));
-  String toStr = String((char)('a' + ((move.to & 0x07) >> 0))) +
-                 String((char)('1' + 7 - ((move.to & 0x70) >> 4)));
-  StickCP2.Display.drawString("Ai move:", StickCP2.Display.width() / 2,
-                              StickCP2.Display.height() / 5);
-  StickCP2.Display.drawString("->", StickCP2.Display.width() / 2,
-                              StickCP2.Display.height() / 2);
-  StickCP2.Display.drawString(fromStr, StickCP2.Display.width() / 2 - 60,
-                              StickCP2.Display.height() / 2);
-  StickCP2.Display.drawString(toStr, StickCP2.Display.width() / 2 + 60,
-                              StickCP2.Display.height() / 2);
-}
 
 void initGame() {
   mcumax_init();
