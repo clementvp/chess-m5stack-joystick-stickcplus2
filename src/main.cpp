@@ -3,19 +3,29 @@
 #include <Arduino.h>
 #include <mcu-max.h>
 
+// Constantes pour l'adresse du joystick et le seuil
 #define JOY_ADDR 0x38
-const int threshold = 50;
+const int JOY_THRESHOLD = 50;
+
+// Constantes pour l'affichage et le son
+const int TONE_FREQ = 8000;
+const int TONE_DURATION = 20;
+const float TEXT_SIZE_SMALL = 1.0;
+const float TEXT_SIZE_MEDIUM = 1.5;
+const float TEXT_SIZE_LARGE = 2.0;
+const int INVALID_MOVE_DELAY = 1000;
+const int CHECK_DELAY = 1500;
 
 int8_t x_data, y_data, button_data;
 int8_t prev_x = 0, prev_y = 0, prev_button = 1;
 
-bool isUp() { return (x_data < -threshold && prev_x >= -threshold); }
+bool isUp() { return (x_data < -JOY_THRESHOLD && prev_x >= -JOY_THRESHOLD); }
 
-bool isDown() { return (x_data > threshold && prev_x <= threshold); }
+bool isDown() { return (x_data > JOY_THRESHOLD && prev_x <= JOY_THRESHOLD); }
 
-bool isRight() { return (y_data > threshold && prev_y <= threshold); }
+bool isRight() { return (y_data > JOY_THRESHOLD && prev_y <= JOY_THRESHOLD); }
 
-bool isLeft() { return (y_data < -threshold && prev_y >= -threshold); }
+bool isLeft() { return (y_data < -JOY_THRESHOLD && prev_y >= -JOY_THRESHOLD); }
 
 bool isButtonPressed() { return (button_data == 0 && prev_button == 1); }
 
@@ -121,24 +131,24 @@ void initGame() {
   mcumax_init();
   StickCP2.Display.drawString("M5 Chess", StickCP2.Display.width() / 2,
                               StickCP2.Display.height() / 3);
-  StickCP2.Display.setTextSize(1);
+  StickCP2.Display.setTextSize(TEXT_SIZE_SMALL);
   StickCP2.Display.drawString("Press BTN Joystick for new game",
                               StickCP2.Display.width() / 2,
                               StickCP2.Display.height() / 2);
-  StickCP2.Display.setTextSize(1.5);
+  StickCP2.Display.setTextSize(TEXT_SIZE_MEDIUM);
   if (isButtonPressed()) {
-    StickCP2.Speaker.tone(8000, 20);
+    StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     StickCP2.Display.clear();
     currentState = CHOOSECOLOR;
   }
 }
 
 void chooseColor() {
-  StickCP2.Display.setTextSize(2);
+  StickCP2.Display.setTextSize(TEXT_SIZE_LARGE);
   StickCP2.Display.drawString("Choose Color", StickCP2.Display.width() / 2,
                               StickCP2.Display.height() / 5);
 
-  StickCP2.Display.setTextSize(1.5);
+  StickCP2.Display.setTextSize(TEXT_SIZE_MEDIUM);
   StickCP2.Display.drawCenterString("White", StickCP2.Display.width() / 4,
                                     StickCP2.Display.height() / 2);
   StickCP2.Display.drawCenterString("Black", 3 * StickCP2.Display.width() / 4,
@@ -154,28 +164,28 @@ void chooseColor() {
   }
 
   if (isLeft()) {
-    StickCP2.Speaker.tone(8000, 20);
+    StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     selectedColor = MCUMAX_BOARD_WHITE;
     StickCP2.Display.clear();
   }
   if (isRight()) {
-    StickCP2.Speaker.tone(8000, 20);
+    StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     selectedColor = MCUMAX_BOARD_BLACK;
     StickCP2.Display.clear();
   }
 
   if (isButtonPressed()) {
-    StickCP2.Speaker.tone(8000, 20);
+    StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     StickCP2.Display.clear();
     currentState = CHOOSEDIFFICULTY;
   }
 }
 
 void chooseDifficulty() {
-  StickCP2.Display.setTextSize(2);
+  StickCP2.Display.setTextSize(TEXT_SIZE_LARGE);
   StickCP2.Display.drawString("Choose Difficulty", StickCP2.Display.width() / 2,
                               StickCP2.Display.height() / 5);
-  StickCP2.Display.setTextSize(1.5);
+  StickCP2.Display.setTextSize(TEXT_SIZE_MEDIUM);
   StickCP2.Display.drawCenterString(
       String("Level: ") +
           String(difficulty_levels[currentIndexDifficulty].level),
@@ -183,20 +193,20 @@ void chooseDifficulty() {
 
   if (isDown()) {
     if (currentIndexDifficulty > 0) {
-      StickCP2.Speaker.tone(8000, 20);
+      StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
       currentIndexDifficulty--;
       StickCP2.Display.clear();
     }
   }
   if (isUp()) {
     if (currentIndexDifficulty < 14) {
-      StickCP2.Speaker.tone(8000, 20);
+      StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
       currentIndexDifficulty++;
       StickCP2.Display.clear();
     }
   }
   if (isButtonPressed()) {
-    StickCP2.Speaker.tone(8000, 20);
+    StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     StickCP2.Display.clear();
     mcu_nodes = difficulty_levels[currentIndexDifficulty].node_max;
     mcu_depth = difficulty_levels[currentIndexDifficulty].depth_max;
@@ -213,12 +223,12 @@ void inGame() {
 }
 
 void playerMove() {
-  StickCP2.Display.setTextSize(2);
+  StickCP2.Display.setTextSize(TEXT_SIZE_LARGE);
   if (mcumax_is_checkmate(selectedColor)) {
     StickCP2.Display.drawString("Player in Checkmate!",
                                 StickCP2.Display.width() / 2,
                                 StickCP2.Display.height() / 2);
-    delay(1500);
+    delay(CHECK_DELAY);
     StickCP2.Display.clear();
     currentState = GAMEOVER;
     return;
@@ -227,16 +237,16 @@ void playerMove() {
     StickCP2.Display.drawString("Player in Check!",
                                 StickCP2.Display.width() / 2,
                                 StickCP2.Display.height() / 2);
-    delay(1500);
+    delay(CHECK_DELAY);
     StickCP2.Display.clear();
   }
-  StickCP2.Display.setTextSize(2);
+  StickCP2.Display.setTextSize(TEXT_SIZE_LARGE);
   StickCP2.Display.drawString("Player Move", StickCP2.Display.width() / 2,
                               StickCP2.Display.height() / 5);
-  StickCP2.Display.setTextSize(1.5);
+  StickCP2.Display.setTextSize(TEXT_SIZE_MEDIUM);
   StickCP2.Display.drawString("->", StickCP2.Display.width() / 2,
                               StickCP2.Display.height() / 2);
-  StickCP2.Display.setTextSize(2);
+  StickCP2.Display.setTextSize(TEXT_SIZE_LARGE);
   StickCP2.Display.drawString(String(playerRow[fromRow]),
                               StickCP2.Display.width() / 2 - 60,
                               StickCP2.Display.height() / 2);
@@ -273,7 +283,7 @@ void playerMove() {
   }
 
   if (isRight()) {
-    StickCP2.Speaker.tone(8000, 20);
+    StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     if (currentPlayerMoveSelection == FROMROW) {
       currentPlayerMoveSelection = FROMCOL;
     } else if (currentPlayerMoveSelection == FROMCOL) {
@@ -284,7 +294,7 @@ void playerMove() {
     StickCP2.Display.clear();
   }
   if (isLeft()) {
-    StickCP2.Speaker.tone(8000, 20);
+    StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     if (currentPlayerMoveSelection == TOCOL) {
       currentPlayerMoveSelection = TOROW;
     } else if (currentPlayerMoveSelection == TOROW) {
@@ -295,7 +305,7 @@ void playerMove() {
     StickCP2.Display.clear();
   }
   if (isUp()) {
-    StickCP2.Speaker.tone(8000, 20);
+    StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     if (currentPlayerMoveSelection == FROMROW) {
       if (fromRow < 7)
         fromRow++;
@@ -312,7 +322,7 @@ void playerMove() {
     StickCP2.Display.clear();
   }
   if (isDown()) {
-    StickCP2.Speaker.tone(8000, 20);
+    StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     if (currentPlayerMoveSelection == FROMROW) {
       if (fromRow > 0)
         fromRow--;
@@ -330,7 +340,7 @@ void playerMove() {
   }
 
   if (isButtonPressed()) {
-    StickCP2.Speaker.tone(8000, 20);
+    StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     StickCP2.Display.clear();
     String fromSquareStr = get_square_str(fromRow, fromCol);
     String toSquareStr = get_square_str(toRow, toCol);
@@ -358,7 +368,7 @@ void playerMove() {
       StickCP2.Display.clear();
       StickCP2.Display.drawString("Invalid Move", StickCP2.Display.width() / 2,
                                   StickCP2.Display.height() / 2);
-      delay(1000);
+      delay(INVALID_MOVE_DELAY);
       currentState = PLAYERMOVE;
       StickCP2.Display.clear();
     }
@@ -366,7 +376,7 @@ void playerMove() {
 }
 
 void AiMove() {
-  StickCP2.Display.setTextSize(2);
+  StickCP2.Display.setTextSize(TEXT_SIZE_LARGE);
   static bool moveDisplayed = false;
   if (!moveDisplayed) {
     if (mcumax_is_checkmate(selectedColor == MCUMAX_BOARD_WHITE
@@ -375,7 +385,7 @@ void AiMove() {
       StickCP2.Display.drawString("AI in Checkmate!",
                                   StickCP2.Display.width() / 2,
                                   StickCP2.Display.height() / 2);
-      delay(1500);
+      delay(CHECK_DELAY);
       StickCP2.Display.clear();
       currentState = GAMEOVER;
     }
@@ -384,7 +394,7 @@ void AiMove() {
                             : MCUMAX_BOARD_WHITE)) {
       StickCP2.Display.drawString("AI in Check!", StickCP2.Display.width() / 2,
                                   StickCP2.Display.height() / 2);
-      delay(1500);
+      delay(CHECK_DELAY);
       StickCP2.Display.clear();
     }
     StickCP2.Display.clear();
@@ -403,7 +413,7 @@ void AiMove() {
     moveDisplayed = true;
   }
   if (isButtonPressed()) {
-    StickCP2.Speaker.tone(8000, 20);
+    StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     StickCP2.Display.clear();
     currentState = PLAYERMOVE;
     moveDisplayed = false;
@@ -411,11 +421,11 @@ void AiMove() {
 }
 
 void gameOver() {
-  StickCP2.Display.setTextSize(2);
+  StickCP2.Display.setTextSize(TEXT_SIZE_LARGE);
   StickCP2.Display.drawString("Game Over", StickCP2.Display.width() / 2,
                               StickCP2.Display.height() / 2);
   if (isButtonPressed()) {
-    StickCP2.Speaker.tone(8000, 20);
+    StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     StickCP2.Display.clear();
     currentState = INIT;
   }
@@ -428,7 +438,7 @@ void setup() {
   StickCP2.Display.setRotation(3);
   StickCP2.Display.setTextColor(WHITE);
   StickCP2.Display.setTextDatum(middle_center);
-  StickCP2.Display.setTextSize(1.5);
+  StickCP2.Display.setTextSize(TEXT_SIZE_MEDIUM);
 }
 
 void loop() {
