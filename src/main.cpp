@@ -6,21 +6,7 @@
 #include <Arduino.h>
 #include <mcu-max.h>
 
-// Constantes pour l'adresse du joystick et le seuil
-#define JOY_ADDR 0x38
-
-int8_t x_data, y_data, button_data;
-int8_t prev_x = 0, prev_y = 0, prev_button = 1;
-
-bool isUp() { return (x_data < -JOY_THRESHOLD && prev_x >= -JOY_THRESHOLD); }
-
-bool isDown() { return (x_data > JOY_THRESHOLD && prev_x <= JOY_THRESHOLD); }
-
-bool isRight() { return (y_data > JOY_THRESHOLD && prev_y <= JOY_THRESHOLD); }
-
-bool isLeft() { return (y_data < -JOY_THRESHOLD && prev_y >= -JOY_THRESHOLD); }
-
-bool isButtonPressed() { return (button_data == 0 && prev_button == 1); }
+#include "joystick_utils.h"
 
 enum ColorSelection { MCUMAX_BOARD_WHITE, MCUMAX_BOARD_BLACK };
 
@@ -61,7 +47,7 @@ void initGame() {
                               StickCP2.Display.width() / 2,
                               StickCP2.Display.height() / 2);
   StickCP2.Display.setTextSize(TEXT_SIZE_MEDIUM);
-  if (isButtonPressed()) {
+  if (joystick_isButtonPressed()) {
     StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     StickCP2.Display.clear();
     currentState = CHOOSECOLOR;
@@ -88,18 +74,18 @@ void chooseColor() {
                               WHITE);
   }
 
-  if (isLeft()) {
+  if (joystick_isLeft()) {
     StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     selectedColor = MCUMAX_BOARD_WHITE;
     StickCP2.Display.clear();
   }
-  if (isRight()) {
+  if (joystick_isRight()) {
     StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     selectedColor = MCUMAX_BOARD_BLACK;
     StickCP2.Display.clear();
   }
 
-  if (isButtonPressed()) {
+  if (joystick_isButtonPressed()) {
     StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     StickCP2.Display.clear();
     currentState = CHOOSEDIFFICULTY;
@@ -116,21 +102,21 @@ void chooseDifficulty() {
           String(difficulty_levels[currentIndexDifficulty].level),
       StickCP2.Display.width() / 2, StickCP2.Display.height() / 2);
 
-  if (isDown()) {
+  if (joystick_isDown()) {
     if (currentIndexDifficulty > 0) {
       StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
       currentIndexDifficulty--;
       StickCP2.Display.clear();
     }
   }
-  if (isUp()) {
+  if (joystick_isUp()) {
     if (currentIndexDifficulty < 14) {
       StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
       currentIndexDifficulty++;
       StickCP2.Display.clear();
     }
   }
-  if (isButtonPressed()) {
+  if (joystick_isButtonPressed()) {
     StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     StickCP2.Display.clear();
     mcu_nodes = difficulty_levels[currentIndexDifficulty].node_max;
@@ -207,7 +193,7 @@ void playerMove() {
                               WHITE);
   }
 
-  if (isRight()) {
+  if (joystick_isRight()) {
     StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     if (currentPlayerMoveSelection == FROMROW) {
       currentPlayerMoveSelection = FROMCOL;
@@ -218,7 +204,7 @@ void playerMove() {
     }
     StickCP2.Display.clear();
   }
-  if (isLeft()) {
+  if (joystick_isLeft()) {
     StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     if (currentPlayerMoveSelection == TOCOL) {
       currentPlayerMoveSelection = TOROW;
@@ -229,7 +215,7 @@ void playerMove() {
     }
     StickCP2.Display.clear();
   }
-  if (isUp()) {
+  if (joystick_isUp()) {
     StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     if (currentPlayerMoveSelection == FROMROW) {
       if (fromRow < 7)
@@ -246,7 +232,7 @@ void playerMove() {
     }
     StickCP2.Display.clear();
   }
-  if (isDown()) {
+  if (joystick_isDown()) {
     StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     if (currentPlayerMoveSelection == FROMROW) {
       if (fromRow > 0)
@@ -264,7 +250,7 @@ void playerMove() {
     StickCP2.Display.clear();
   }
 
-  if (isButtonPressed()) {
+  if (joystick_isButtonPressed()) {
     StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     StickCP2.Display.clear();
     String fromSquareStr = get_square_str(fromRow, fromCol);
@@ -337,7 +323,7 @@ void AiMove() {
     print_move(move);
     moveDisplayed = true;
   }
-  if (isButtonPressed()) {
+  if (joystick_isButtonPressed()) {
     StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     StickCP2.Display.clear();
     currentState = PLAYERMOVE;
@@ -349,7 +335,7 @@ void gameOver() {
   StickCP2.Display.setTextSize(TEXT_SIZE_LARGE);
   StickCP2.Display.drawString("Game Over", StickCP2.Display.width() / 2,
                               StickCP2.Display.height() / 2);
-  if (isButtonPressed()) {
+  if (joystick_isButtonPressed()) {
     StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     StickCP2.Display.clear();
     currentState = INIT;
@@ -368,16 +354,7 @@ void setup() {
 
 void loop() {
   StickCP2.update();
-  Wire.beginTransmission(JOY_ADDR);
-  Wire.write(0x02);
-  Wire.endTransmission();
-  Wire.requestFrom(JOY_ADDR, 3);
-
-  if (Wire.available()) {
-    x_data = Wire.read();
-    y_data = Wire.read();
-    button_data = Wire.read();
-  }
+  joystick_update();
 
   switch (currentState) {
   case INIT:
@@ -403,7 +380,5 @@ void loop() {
     break;
   }
 
-  prev_x = x_data;
-  prev_y = y_data;
-  prev_button = button_data;
+  joystick_save_prev();
 }
