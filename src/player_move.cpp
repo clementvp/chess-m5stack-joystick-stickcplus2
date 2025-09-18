@@ -162,6 +162,7 @@ void playerMove() {
       fromCol = 0;
       toRow = 0;
       toCol = 0;
+      currentPlayerMoveSelection = FROMROW;
       currentState = AIMOVE;
     } else {
       StickCP2.Display.clear();
