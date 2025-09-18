@@ -2,7 +2,7 @@
 #include <stdint.h>
 
 #define JOY_ADDR 0x38
-const int JOY_THRESHOLD = 60;
+const int JOY_THRESHOLD = 80;
 
 const int TONE_FREQ = 8000;
 const int TONE_DURATION = 20;
