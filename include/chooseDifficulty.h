@@ -3,4 +3,4 @@
 
 void chooseDifficulty();
 
-#endif // CHOOSE_DIFFICULTY_H
+#endif

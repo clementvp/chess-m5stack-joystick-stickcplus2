@@ -3,4 +3,4 @@
 
 void chooseColor();
 
-#endif // CHOOSE_COLOR_H
+#endif

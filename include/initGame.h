@@ -3,4 +3,4 @@
 
 void initGame();
 
-#endif // INIT_GAME_H
+#endif

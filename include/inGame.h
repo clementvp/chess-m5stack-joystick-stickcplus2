@@ -6,4 +6,4 @@
 
 void inGame();
 
-#endif // INGAME_H
+#endif
