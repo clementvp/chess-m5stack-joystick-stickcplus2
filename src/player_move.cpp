@@ -23,7 +23,7 @@ extern PlayerMoveSelection currentPlayerMoveSelection;
 
 void playerMove() {
   StickCP2.Display.setTextSize(TEXT_SIZE_LARGE);
-  if (mcumax_is_checkmate(selectedColor)) {
+  if (mcumax_is_in_checkmate(selectedColor)) {
     StickCP2.Display.drawString("Player in Checkmate!",
                                 StickCP2.Display.width() / 2,
                                 StickCP2.Display.height() / 2);
@@ -32,7 +32,7 @@ void playerMove() {
     currentState = GAMEOVER;
     return;
   }
-  if (mcumax_is_check(selectedColor)) {
+  if (mcumax_is_in_check(selectedColor)) {
     StickCP2.Display.drawString("Player in Check!",
                                 StickCP2.Display.width() / 2,
                                 StickCP2.Display.height() / 2);
