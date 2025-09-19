@@ -10,7 +10,7 @@ const float TEXT_SIZE_SMALL = 1.0;
 const float TEXT_SIZE_MEDIUM = 1.5;
 const float TEXT_SIZE_LARGE = 2.0;
 const int INVALID_MOVE_DELAY = 1000;
-const int CHECK_DELAY = 1500;
+const int CHECK_DELAY = 2000;
 
 typedef struct {
   uint8_t level;
