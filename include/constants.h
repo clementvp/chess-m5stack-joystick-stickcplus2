@@ -9,7 +9,7 @@ const int TONE_DURATION = 20;
 const float TEXT_SIZE_SMALL = 1.0;
 const float TEXT_SIZE_MEDIUM = 1.5;
 const float TEXT_SIZE_LARGE = 2.0;
-const int INVALID_MOVE_DELAY = 1000;
+const int INVALID_MOVE_DELAY = 2000;
 const int CHECK_DELAY = 2000;
 
 typedef struct {
@@ -18,11 +18,14 @@ typedef struct {
   uint32_t depth_max;
 } difficulty_config_t;
 
-const difficulty_config_t difficulty_levels[15] = {
-    {1, 300, 2},    {2, 600, 2},    {3, 1000, 2},   {4, 1500, 3},
-    {5, 2500, 3},   {6, 4000, 3},   {7, 6000, 4},   {8, 8500, 4},
-    {9, 12000, 4},  {10, 16000, 5}, {11, 22000, 5}, {12, 30000, 5},
-    {13, 40000, 6}, {14, 55000, 6}, {15, 75000, 6}};
+const difficulty_config_t difficulty_levels[25] = {
+    {1, 300, 2},      {2, 600, 2},      {3, 1000, 2},     {4, 1500, 3},
+    {5, 2500, 3},     {6, 4000, 3},     {7, 6000, 4},     {8, 8500, 4},
+    {9, 12000, 4},    {10, 16000, 5},   {11, 22000, 5},   {12, 30000, 5},
+    {13, 40000, 6},   {14, 55000, 6},   {15, 75000, 6},   {16, 100000, 7},
+    {17, 130000, 7},  {18, 170000, 8},  {19, 220000, 8},  {20, 280000, 9},
+    {21, 350000, 10}, {22, 430000, 10}, {23, 520000, 11}, {24, 620000, 11},
+    {25, 730000, 12}};
 
 extern const char *playerRow[8];
 extern const char *playerCol[8];
