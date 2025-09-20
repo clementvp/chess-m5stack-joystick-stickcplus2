@@ -27,7 +27,7 @@ void chooseDifficulty() {
     }
   }
   if (joystick_isUp()) {
-    if (currentIndexDifficulty < 14) {
+    if (currentIndexDifficulty < 24) {
       StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
       currentIndexDifficulty++;
       StickCP2.Display.clear();
