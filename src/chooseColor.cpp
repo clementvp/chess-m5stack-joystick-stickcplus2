@@ -1,10 +1,11 @@
 #include "chooseColor.h"
 #include "constants.h"
 #include "joystick_utils.h"
+#include "mcu-max.h"
 #include "state.h"
 #include <M5StickCPlus2.h>
 
-extern ColorSelection selectedColor;
+extern int selectedColor;
 extern State currentState;
 
 void chooseColor() {

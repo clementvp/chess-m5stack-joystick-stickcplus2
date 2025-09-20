@@ -10,7 +10,7 @@
 #include <mcu-max.h>
 
 extern State currentState;
-extern ColorSelection selectedColor;
+extern int selectedColor;
 extern int mcu_nodes;
 extern int mcu_depth;
 

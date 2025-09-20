@@ -10,6 +10,4 @@ enum State {
   GAMEOVER
 };
 
-enum ColorSelection { MCUMAX_BOARD_WHITE, MCUMAX_BOARD_BLACK };
-
 enum PlayerMoveSelection { FROMROW, FROMCOL, TOROW, TOCOL };

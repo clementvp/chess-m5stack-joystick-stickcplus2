@@ -11,7 +11,7 @@
 #include <mcu-max.h>
 
 extern State currentState;
-extern ColorSelection selectedColor;
+extern int selectedColor;
 extern int fromRow;
 extern int fromCol;
 extern int toRow;

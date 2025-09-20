@@ -1,8 +1,9 @@
 #include "inGame.h"
 #include "constants.h"
+#include "mcu-max.h"
 #include "state.h"
 
-extern ColorSelection selectedColor;
+extern int selectedColor;
 extern State currentState;
 
 void inGame() {
