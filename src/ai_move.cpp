@@ -18,34 +18,6 @@ void AiMove() {
   StickCP2.Display.setTextSize(TEXT_SIZE_LARGE);
   static bool moveDisplayed = false;
   if (!moveDisplayed) {
-    if (mcumax_is_in_checkmate(selectedColor == MCUMAX_BOARD_WHITE
-                                   ? MCUMAX_BOARD_BLACK
-                                   : MCUMAX_BOARD_WHITE)) {
-      StickCP2.Display.drawString("AI in Checkmate!",
-                                  StickCP2.Display.width() / 2,
-                                  StickCP2.Display.height() / 2);
-      // Attendre jusqu'à ce que le bouton soit pressé pour l'échec et mat aussi
-      while (!joystick_isButtonPressed()) {
-        StickCP2.update();
-        joystick_update();
-        delay(50);
-      }
-      StickCP2.Display.clear();
-      currentState = GAMEOVER;
-    }
-    if (mcumax_is_in_check(selectedColor == MCUMAX_BOARD_WHITE
-                               ? MCUMAX_BOARD_BLACK
-                               : MCUMAX_BOARD_WHITE)) {
-      StickCP2.Display.drawString("Ai in Check!", StickCP2.Display.width() / 2,
-                                  StickCP2.Display.height() / 2);
-
-      while (!joystick_isButtonPressed()) {
-        StickCP2.update();
-        joystick_update();
-        delay(50);
-      }
-      StickCP2.Display.clear();
-    }
     StickCP2.Display.clear();
     StickCP2.Display.drawString("AI is thinking...",
                                 StickCP2.Display.width() / 2,

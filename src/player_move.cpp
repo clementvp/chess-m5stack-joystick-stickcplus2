@@ -23,32 +23,6 @@ extern PlayerMoveSelection currentPlayerMoveSelection;
 
 void playerMove() {
   StickCP2.Display.setTextSize(TEXT_SIZE_LARGE);
-  if (mcumax_is_in_checkmate(selectedColor)) {
-    StickCP2.Display.drawString("Player in Checkmate!",
-                                StickCP2.Display.width() / 2,
-                                StickCP2.Display.height() / 2);
-    // Attendre jusqu'à ce que le bouton soit pressé pour l'échec et mat aussi
-    while (!joystick_isButtonPressed()) {
-      StickCP2.update();
-      joystick_update();
-      delay(50);
-    }
-    StickCP2.Display.clear();
-    currentState = GAMEOVER;
-    return;
-  }
-  if (mcumax_is_in_check(selectedColor)) {
-    StickCP2.Display.drawString("Player in Check!",
-                                StickCP2.Display.width() / 2,
-                                StickCP2.Display.height() / 2);
-
-    while (!joystick_isButtonPressed()) {
-      StickCP2.update();
-      joystick_update();
-      delay(50);
-    }
-    StickCP2.Display.clear();
-  }
   StickCP2.Display.setTextSize(TEXT_SIZE_LARGE);
   StickCP2.Display.drawString("Player Move", StickCP2.Display.width() / 2,
                               StickCP2.Display.height() / 5);
