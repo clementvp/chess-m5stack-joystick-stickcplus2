@@ -23,7 +23,6 @@ extern PlayerMoveSelection currentPlayerMoveSelection;
 
 void playerMove() {
   StickCP2.Display.setTextSize(TEXT_SIZE_LARGE);
-  StickCP2.Display.setTextSize(TEXT_SIZE_LARGE);
   StickCP2.Display.drawString("Player Move", StickCP2.Display.width() / 2,
                               StickCP2.Display.height() / 5);
   StickCP2.Display.setTextSize(TEXT_SIZE_MEDIUM);
