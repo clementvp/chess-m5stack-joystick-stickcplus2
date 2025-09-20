@@ -27,7 +27,12 @@ void playerMove() {
     StickCP2.Display.drawString("Player in Checkmate!",
                                 StickCP2.Display.width() / 2,
                                 StickCP2.Display.height() / 2);
-    delay(CHECK_DELAY);
+    // Attendre jusqu'à ce que le bouton soit pressé pour l'échec et mat aussi
+    while (!joystick_isButtonPressed()) {
+      StickCP2.update();
+      joystick_update();
+      delay(50);
+    }
     StickCP2.Display.clear();
     currentState = GAMEOVER;
     return;
@@ -36,7 +41,12 @@ void playerMove() {
     StickCP2.Display.drawString("Player in Check!",
                                 StickCP2.Display.width() / 2,
                                 StickCP2.Display.height() / 2);
-    delay(CHECK_DELAY);
+
+    while (!joystick_isButtonPressed()) {
+      StickCP2.update();
+      joystick_update();
+      delay(50);
+    }
     StickCP2.Display.clear();
   }
   StickCP2.Display.setTextSize(TEXT_SIZE_LARGE);
