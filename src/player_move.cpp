@@ -20,9 +20,19 @@ extern int mcu_nodes;
 extern int mcu_depth;
 
 extern PlayerMoveSelection currentPlayerMoveSelection;
+bool checkDisplayed = false;
 
 void playerMove() {
   StickCP2.Display.setTextSize(TEXT_SIZE_LARGE);
+
+  if (mcumax_is_in_check(selectedColor) &&
+      !checkDisplayed) { // TODO: check for check
+    StickCP2.Display.drawString("Player in check", StickCP2.Display.width() / 2,
+                                StickCP2.Display.height() / 2);
+    delay(CHECK_DELAY);
+    StickCP2.Display.clear();
+    checkDisplayed = true;
+  }
   StickCP2.Display.drawString("Player Move", StickCP2.Display.width() / 2,
                               StickCP2.Display.height() / 5);
   StickCP2.Display.setTextSize(TEXT_SIZE_MEDIUM);
@@ -146,6 +156,7 @@ void playerMove() {
       toRow = 0;
       toCol = 0;
       currentPlayerMoveSelection = FROMROW;
+      checkDisplayed = false;
       currentState = AIMOVE;
     } else {
       StickCP2.Display.clear();
