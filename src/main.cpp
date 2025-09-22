@@ -40,6 +40,11 @@ void loop() {
   StickCP2.update();
   joystick_update();
 
+  if (StickCP2.BtnA.wasDoubleClicked()) {
+    currentState = INIT;
+    return;
+  }
+
   switch (currentState) {
   case INIT:
     initGame();
