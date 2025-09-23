@@ -15,10 +15,23 @@ extern int mcu_nodes;
 extern int mcu_depth;
 
 bool checkAiDisplayed = false;
+bool checkmateAiDisplayed = false;
 static bool aiMoveDisplayed = false;
 
 void AiMove() {
   StickCP2.Display.setTextSize(TEXT_SIZE_LARGE);
+
+  if (mcumax_is_in_checkmate(selectedColor == MCUMAX_BOARD_WHITE
+                                 ? MCUMAX_BOARD_BLACK
+                                 : MCUMAX_BOARD_WHITE) &&
+      !checkmateAiDisplayed) {
+    StickCP2.Display.drawString("AI in Checkmate! Player wins",
+                                StickCP2.Display.width() / 2,
+                                StickCP2.Display.height() / 2);
+    delay(CHECK_DELAY);
+    checkmateAiDisplayed = true;
+    currentState = GAMEOVER;
+  }
 
   if (mcumax_is_in_check(selectedColor == MCUMAX_BOARD_WHITE
                              ? MCUMAX_BOARD_BLACK

@@ -21,18 +21,29 @@ extern int mcu_depth;
 
 extern PlayerMoveSelection currentPlayerMoveSelection;
 bool checkPlayerDisplayed = false;
+bool checkmatePlayerDisplayed = false;
 
 void playerMove() {
   StickCP2.Display.setTextSize(TEXT_SIZE_LARGE);
 
-  if (mcumax_is_in_check(selectedColor) &&
-      !checkPlayerDisplayed) { // TODO: check for check
+  if (mcumax_is_in_checkmate(selectedColor) && !checkmatePlayerDisplayed) {
+    StickCP2.Display.drawString("Player in Checkmate! AI wins",
+                                StickCP2.Display.width() / 2,
+                                StickCP2.Display.height() / 2);
+    delay(CHECK_DELAY);
+    currentState = GAMEOVER;
+    checkmatePlayerDisplayed = true;
+    return;
+  }
+
+  if (mcumax_is_in_check(selectedColor) && !checkPlayerDisplayed) {
     StickCP2.Display.drawString("Player in check", StickCP2.Display.width() / 2,
                                 StickCP2.Display.height() / 2);
     delay(CHECK_DELAY);
     StickCP2.Display.clear();
     checkPlayerDisplayed = true;
   }
+
   StickCP2.Display.drawString("Player Move", StickCP2.Display.width() / 2,
                               StickCP2.Display.height() / 5);
   StickCP2.Display.setTextSize(TEXT_SIZE_MEDIUM);
