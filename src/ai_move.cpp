@@ -15,10 +15,11 @@ extern int mcu_nodes;
 extern int mcu_depth;
 
 bool checkAiDisplayed = false;
+static bool aiMoveDisplayed = false;
 
 void AiMove() {
   StickCP2.Display.setTextSize(TEXT_SIZE_LARGE);
-  static bool moveDisplayed = false;
+
   if (mcumax_is_in_check(selectedColor == MCUMAX_BOARD_WHITE
                              ? MCUMAX_BOARD_BLACK
                              : MCUMAX_BOARD_WHITE) &&
@@ -29,7 +30,7 @@ void AiMove() {
     StickCP2.Display.clear();
     checkAiDisplayed = true;
   }
-  if (!moveDisplayed) {
+  if (!aiMoveDisplayed) {
     StickCP2.Display.clear();
     StickCP2.Display.drawString("AI is thinking...",
                                 StickCP2.Display.width() / 2,
@@ -43,12 +44,12 @@ void AiMove() {
     mcumax_play_move(move);
     StickCP2.Display.clear();
     print_move(move);
-    moveDisplayed = true;
+    aiMoveDisplayed = true;
   }
   if (joystick_isButtonPressed()) {
     StickCP2.Speaker.tone(TONE_FREQ, TONE_DURATION);
     StickCP2.Display.clear();
-    moveDisplayed = false;
+    aiMoveDisplayed = false;
     checkAiDisplayed = false;
     currentState = PLAYERMOVE;
   }

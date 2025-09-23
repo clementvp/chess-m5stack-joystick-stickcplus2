@@ -10,6 +10,7 @@ extern State currentState;
 
 void initGame() {
   mcumax_init();
+  StickCP2.Display.setTextSize(TEXT_SIZE_MEDIUM);
   StickCP2.Display.drawString("M5 Chess", StickCP2.Display.width() / 2,
                               StickCP2.Display.height() / 3);
   StickCP2.Display.setTextSize(TEXT_SIZE_SMALL);

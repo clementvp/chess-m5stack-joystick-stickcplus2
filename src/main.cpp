@@ -33,7 +33,6 @@ void setup() {
   StickCP2.Display.setRotation(3);
   StickCP2.Display.setTextColor(WHITE);
   StickCP2.Display.setTextDatum(middle_center);
-  StickCP2.Display.setTextSize(TEXT_SIZE_MEDIUM);
 }
 
 void loop() {
@@ -41,8 +40,7 @@ void loop() {
   joystick_update();
 
   if (StickCP2.BtnA.wasDoubleClicked()) {
-    currentState = INIT;
-    return;
+    ESP.restart();
   }
 
   switch (currentState) {
