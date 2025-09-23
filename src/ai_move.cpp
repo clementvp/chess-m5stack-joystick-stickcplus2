@@ -25,12 +25,15 @@ void AiMove() {
                                  ? MCUMAX_BOARD_BLACK
                                  : MCUMAX_BOARD_WHITE) &&
       !checkmateAiDisplayed) {
+    StickCP2.Display.setTextSize(TEXT_SIZE_SMALL);
     StickCP2.Display.drawString("AI in Checkmate! Player wins",
                                 StickCP2.Display.width() / 2,
                                 StickCP2.Display.height() / 2);
     delay(CHECK_DELAY);
+    StickCP2.Display.clear();
     checkmateAiDisplayed = true;
     currentState = GAMEOVER;
+    return;
   }
 
   if (mcumax_is_in_check(selectedColor == MCUMAX_BOARD_WHITE
