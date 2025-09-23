@@ -27,7 +27,7 @@ void playerMove() {
   StickCP2.Display.setTextSize(TEXT_SIZE_LARGE);
 
   if (mcumax_is_in_checkmate(selectedColor) && !checkmatePlayerDisplayed) {
-    StickCP2.Display.setTextSize(TEXT_SIZE_SMALL);
+    StickCP2.Display.setTextSize(TEXT_SIZE_MEDIUM);
     StickCP2.Display.drawString("Player in Checkmate! AI wins",
                                 StickCP2.Display.width() / 2,
                                 StickCP2.Display.height() / 2);
