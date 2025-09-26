@@ -26,8 +26,10 @@ void AiMove() {
                                  : MCUMAX_BOARD_WHITE) &&
       !checkmateAiDisplayed) {
     StickCP2.Display.setTextSize(TEXT_SIZE_MEDIUM);
-    StickCP2.Display.drawString("AI in Checkmate! Player wins",
+    StickCP2.Display.drawString("AI in Checkmate! ",
                                 StickCP2.Display.width() / 2,
+                                StickCP2.Display.height() / 3);
+    StickCP2.Display.drawString("Player wins", StickCP2.Display.width() / 2,
                                 StickCP2.Display.height() / 2);
     delay(CHECK_DELAY);
     StickCP2.Display.clear();
